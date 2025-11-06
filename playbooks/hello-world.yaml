@@ -1,0 +1,23 @@
+name: "Hello World"
+version: "1.0.0"
+description: "Simplest possible playbook"
+tags: ["test"]
+
+parameters:
+  - name: message
+    type: string
+    required: false
+    default: "Hello from playbook!"
+
+steps:
+  - name: "Print message"
+    type: command
+    command: "echo ${message}"
+    
+  - name: "Show current directory"
+    type: command
+    command: "pwd"
+    
+  - name: "List files"
+    type: command
+    command: "ls -la"
