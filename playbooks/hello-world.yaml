@@ -1,23 +1,63 @@
-name: "Hello World"
+name: "Hello Playbook"
 version: "1.0.0"
-description: "Simplest possible playbook"
-tags: ["test"]
+description: "Simple test playbook for validating the playbook system"
+tags: ["test", "example"]
+owner: "@damien"
+estimated_duration: "30s"
 
 parameters:
-  - name: message
+  - name: greeting
     type: string
     required: false
-    default: "Hello from playbook!"
+    default: "Hello"
+    description: "Greeting message to display"
+  - name: name
+    type: string
+    required: false
+    default: "World"
+    description: "Name to greet"
 
 steps:
-  - name: "Print message"
-    type: command
-    command: "echo ${message}"
-    
+  - name: "Display greeting"
+    type: print
+    description: "Print a simple greeting message"
+    params:
+      message: "${greeting}, ${name}!"
+  
   - name: "Show current directory"
-    type: command
-    command: "pwd"
-    
-  - name: "List files"
-    type: command
-    command: "ls -la"
+    type: get_cwd
+    description: "Get the current working directory"
+    save_results: "current_dir"
+  
+  - name: "Print current directory"
+    type: print
+    description: "Display the directory we got from previous step"
+    params:
+      message: "Working in directory: ${current_dir}"
+  
+  # - name: "List files"
+  #   type: list_files
+  #   description: "List files in current directory"
+  #   params:
+  #     path: "."
+  #   save_results: "files"
+  #
+  # - name: "Print system info"
+  #   type: print
+  #   description: "Display the system info from previous step"
+  #   params:
+  #     message: "Running on: ${sys_info}"
+  #
+  # - name: "Conditional step"
+  #   type: print
+  #   description: "Only runs if name is World"
+  #   when: "${name} == 'World'"
+  #   params:
+  #     message: "Using default name!"
+  #   timeout: "5s"
+
+post_actions:
+  - name: "Completion message"
+    type: print
+    params:
+      message: "Playbook completed successfully!"

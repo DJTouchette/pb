@@ -1,6 +1,5 @@
 /*
 Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -8,20 +7,37 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"pb/internal/parser"
+	"pb/internal/runner"
 )
 
 // runCmd represents the run command
 var runCmd = &cobra.Command{
 	Use:   "run",
 	Short: "Run a playbook",
-	Long: `Execute the steps of a plabook`,
+	Long:  `Execute the steps of a plabook`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("run called")
+
+		name, _ := cmd.Flags().GetString("name")
+		basePath, _ := parser.GetPlaybookBasePath()
+		fp := basePath + "/" + name
+
+		playbook, err := parser.GetPlaybook(fp)
+
+		if err != nil {
+			fmt.Println("Playbook error")
+			fmt.Println(err)
+		}
+
+		err = runner.Execute(playbook, make(map[string]string))
+		fmt.Println(err)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(runCmd)
+	runCmd.Flags().StringP("name", "n", "", "Playbook name")
 
 	// Here you will define your flags and configuration settings.
 
